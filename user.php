@@ -25,19 +25,22 @@ public function getUserId(){
 
 }
 /*Because we implemented the Crud interface we have to define all the methods, otherwise we will run into an error*/
-public function save(){
+public function save($conn){
     $fn =$this->first_name;
     $ln= $this->last_name;
     $city=$this->city_name;
     
-    mysql_query("INSERT INTO users(first_name,last_name,user_city) VALUES('$fn','$ln','$city')")or die("Error " . mysql_error());
-    $res= mysqli_query($fn, $ln, $city);
-    return $res;
+
+    $result = mysqli_query($conn,"INSERT INTO users(first_name, last_name, user_city) 
+    VALUES ('$fn','$ln','$city')") or die("Error ".mysqli_error());
+return $res;
+
+
 
 }
 
 
-public function readAll(){
+public function readAll($conn){
     return null;
 }
 public function readUnique(){
