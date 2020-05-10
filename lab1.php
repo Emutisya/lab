@@ -13,13 +13,13 @@ if(isset($_POST['btn-save'])){
     $users= new User($first_name,$last_name,$city);
   
 
-    $res = $users->save($con->conn);
+    $res = $users->save();
     //checking whether operation has occured successfully
 
     if($res)
     {
         echo 'Save operation successful!!';
-        $connection->closeConnection();
+      //  $connection->closeConnection();
     }
     else
     {
@@ -27,54 +27,72 @@ if(isset($_POST['btn-save'])){
     }
 
 //        print_r($users);
-
+/*
     foreach ($users as $users)
     {
 
     }
 }
-
-    
+*/
+}
 ?>
 
 
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport"
-              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <link rel="stylesheet" href="lab1.css">
-        <link rel="stylesheet" type="text/css" href="validate.css">
-        <script type="text/javascript" src="validate.js"></script>
-        <title>Text goes here</title>
+        <meta charset="utf-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+
+        <title>User Form</title>
     </head>
     <body>
-    <form method="post" action="<?=$_SERVER['PHP_SELF']?>">
-        <table align="center">
-           
-            <tr>
-                <td><label for="fname">First Name</label></td>
-                <td><input type="text" name="first_name" id="fname" required placeholder="First Name"></td>
-            </tr>
-            <tr>
-                <td><label for="lname">Last Name</label></td>
-                <td><input type="text" name="last_name" id="lname" required placeholder="Last Name"></td>
-            </tr>
-            <tr>
-                <td><label for="city">City</label></td>
-                <td><input type="text" name="city_name" id="city" placeholder="City"></td>
-            </tr>
-           
-            <tr>  
-                <td><button type="submit" name="btn_save"><strong>SAVE</strong></button></td>
-            </tr>
-            <tr>
-            
-        </table>
-    </form>
+    <form method="post" action="<?=$_SERVER['PHP_SELF']?>"  style='width:300px; border: 2px solid pink   '>
+    <div class="form-group">
+    <div class="form-group">
 
-  
+<label for="first_name">First Name:</label>
+
+<input type="text" class="form-control" name="first_name" required>
+
+</div>
+
+
+
+<div class="form-group">
+
+<label for="last_name">Last Name:</label>
+
+<input type="text" name="last_name" class="form-control" required>
+
+</div>
+
+
+
+<div class="form-group">
+
+<label for="city_name">City Name:</label>
+
+<input type="text" name="city_name" class="form-control"  required>
+
+</div>
+
+
+
+
+
+<button type="submit" name="btn-save" class="btn btn-default"><strong>SAVE</strong></button>
+
+</div>
+  </form>
 
     </body>
 </html>

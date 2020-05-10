@@ -1,27 +1,37 @@
 <?php
-define('DB_SERVER','localhost'); //we use the local machine
-define('DB_USER','root');//user is root
-define('DB_PASS','');//no password
-define('DB_NAME','btc3205');//Database name.
+
+define('DB_SERVER','localhost');
+
+define('DB_USER','root');
+
+define('DB_PASS','');
+
+define('DB_NAME','btc3205');
+
+
 
 class DBConnector{
-    public $conn;
-    /*We connect to our database inside our class constructor
-    so we can always cause a databse connection whenever an object is created.*/
-    public function __construct(){
 
-        $this->conn = new mysqli(DB_SERVER,DB_USER,DB_PASS);
-        if ($this->conn->connect_error)
-        {
-            die("Connection failed: " . $this->conn->connect_error);
-        }
+public $conn;
 
-        mysqli_select_db($this->conn,DB_NAME);
-    }
 
-    public function closeConnection()
-    {
-        $this->conn->close();
-    }
+
+function ___construct(){
+
+$this->conn=msqli_connect(DB_SERVER, DB_USER, DB_PASS) or die("Error: ".mysqli_error());
+
+mysqli_select_db(DB_NAME, $this->conn);
+
 }
+
+
+
+public function closeDatabase() {
+
+mysqli_close($this->conn);
+
+}
+
+}
+
 ?>

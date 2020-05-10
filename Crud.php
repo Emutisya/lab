@@ -1,22 +1,29 @@
-<?php
-//creation of interface
-interface Crud{
-/*all this mehods have to be implemented by any class that implements these interface*/
-public function save($conn);
+<?php 
 
-public function readAll($conn);
+   interface Crud{
 
-public function readUnique();
+    
 
-public function search();
+    public function save();
 
-public function update();
+    public function readAll();
 
-public function removeOne();
+    public function readUnique();
 
-public function removeAll();
+    public function search();
+
+    public function update();
+
+    public function removeOne();
+
+    public function removeAll();
 
 
 
-}
+ 
+
+   } 
+
+
+
 ?>
