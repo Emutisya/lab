@@ -18,8 +18,12 @@
 
     public function removeAll();
 
+//Lab 2 additions
+    public function validateForm();
 
 
+
+    public function createFormErrorSessions();
  
 
    } 
