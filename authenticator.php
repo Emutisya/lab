@@ -9,16 +9,14 @@ interface Authenticator
     public function hashPassword();
 
 
-
-    public static function isPasswordCorrect($password,$username);
-
+    public function isPasswordCorrect();
 
 
-    public function login($conn,$password,$username);
+    public function login();
 
 
 
-    public static function logout();
+    public function logout();
 
 
 

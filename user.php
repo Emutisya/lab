@@ -1,244 +1,214 @@
 <?php
-include 'crud.php';
 
-include 'authenticator.php';
+include "Crud.php";
+include "authenticator.php";
+include_once "DBConnector.php";
 
-include_once 'DBConnector.php';
+class User implements Crud, Authenticator{
+    private $userid; 
+    private $firstname;
+    private $lastname;
+    private $cityname;
 
-class User implements Crud,Authenticator{
-    private $user_id;
-    private $first_name;
-    private $last_name;
-    private $city_name;
+//new Variables to be used during the login process
     private $username;
     private $password;
 
-/*we can use the class constructor to iniyialize our values,member variables cannot be instantiated from elsewhere; they are private*/
-function __construct($fname,$lname,$cname,$uname,$pass){
-    $this->first_name=$fname;
-    $this->last_name=$lname;
-    $this->city_name=$cname;
-    $this->username =$uname;
-    $this->password =$pass;
 
-
+    function __construct(){
+        
+       
 }
 
-public static function create()
-    {
-        $instance = new self("","","","","");
-        return $instance;
+public static function create(){
+    
+    $instance = new self();
+    return $instance;
+}
+
+    public function setUserid($userid){
+        $this->userid = $userid;
     }
 
-    /**
-     * @param mixed $user_id
-     */
-
-//user_id setter
-public function setUserId($user_id){
-    $this->user_id=$user_id;
-
-}
-
-    /**
-     * @return mixed
-     */
-//user_id getter
-public function getUserId(){
-    return $this->$user_id;
-
-}
-    /**
-
-     * @return mixed
-
-     */
-//username and password getter and setter
-    public function getUsername()
-    {
-        return $this->username;
+    public function getUserid(){
+        return $this->userid;
     }
-    /**
 
-     * @param mixed $username
 
-     */
-    public function setUsername($username)
-    {
+//Getters and setter for first name
+    public function setFirstname($firstname){
+        $this->firstname = $firstname;
+    }
+
+    public function getFirstname(){
+        return $this->firstname;
+    }
+
+
+
+    
+    public function setLastname($lastname){
+        $this->lastname = $lastname;
+    }
+
+    public function getLastname(){
+        return $this->lastname;
+    }
+
+
+    //Getters and setters for the last cityname
+    public function setCityname($cityname){
+        $this->cityname = $cityname;
+
+    }
+
+    public function getCityname(){
+        return $this->cityname;
+    }
+
+
+//LOGIN CREDENTIALS
+
+    //Setters and Getters for the username
+    public function setUsername($username){
         $this->username = $username;
     }
-    /**
 
-     * @return mixed
-
-     */
-    public function getPassword()
-    {
-        return $this->password;
+    public function getUsername(){
+        return $this->username;
     }
-    /**
 
-     * @param mixed $password
 
-     */
-    public function setPassword($password)
-    {
+
+//Setters and Getters for the password
+    public function setPassword($password){
         $this->password = $password;
     }
 
+    public function getPassword(){
+        return $this->password;
+    }
 
-/*Because we implemented the Crud interface we have to define all the methods, otherwise we will run into an error*/
-public function save(){
-    $db = mysqli_connect("localhost","root","","btc3205");
 
-    $fn =$this->first_name;
-    $ln= $this->last_name;
-    $city=$this->city_name;
-    $un = $this->username;
+
+
+
+    public function save(){
+
+        $db = mysqli_connect("localhost", "root", "", "btc3205");
+
+    $fn = $this->firstname;
+     $ln = $this->lastname;
+    $city = $this->cityname;
+    $uname = $this->username;
+
     $this->hashPassword();
     $pass = $this->password;
+    
 
-    $res = mysqli_query($db,"INSERT INTO users(first_name, last_name, user_city,username,password)
-    VALUES ('$fn','$ln','$city','$un','$pass')") or die("Error ".mysqli_error());
-return $res;
+    $temp = mysqli_query($db,"INSERT INTO users(first_name,last_name,user_city,username,password) VALUES ('$fn', '$ln', '$city','$uname', '$pass')") or die("Error:" . mysqli_error());
 
-}
+    return $temp; 
 
-
-public function readAll(){
-    return null;
-}
-public function readUnique(){
-    return null;
-}
-public function search(){
-    return null;
-}
-public function update(){
-    return null;
-}
-public function removeOne(){
-    return null;
-}
-public function removeAll(){
-    return null;
-}
-public function validateForm()
-
-{
-
-    $fn = $this->first_name;
-
-    $ln = $this->last_name;
-
-    $city = $this->city_name;
-
-
-
-    if($fn == "" || $ln == "" || $city == "")
-
-    {
-
-        return false;
+   
 
     }
 
+    
+public function readAll(){
+    return null;
+
+}
+
+public function readUnique(){
+    return null;
+}
+
+public function search(){
+    return null;
+}
+
+public function update(){
+    return null;
+}
+
+public function removeOne(){
+    return null;
+}
+
+
+public function removeAll(){
+    return null;
+}
+
+
+
+public function validateForm(){
+    $fn = $this->firstname;
+    $ln = $this->lastname;
+    $city = $this->cityname;
+
+    if($fn=="" || $ln=="" || $city==""){
+        return false;
+    }
     return true;
 
 }
 
 
-
-public function createFormErrorSessions()
-
-{
-
-    session_start();
-
-    $_SESSION['form_errors'] = 'All fields are required';
-
+public function createFormErrorSessions(){
+    $_SESSION['form_errors'] = "All fields are required";
 }
 
 
 
 
-public function hashPassword()
+public function isPasswordCorrect(){
+    $db = mysqli_connect("localhost", "root", "", "btc3205");
+    $con = new DBConnector;
+$found = false;
 
-{
 
-    $this->password = password_hash($this->password,PASSWORD_DEFAULT);
-
+$res = mysqli_query($db,"SELECT * FROM  users") or die("Error:" . mysqli_error());
+if(mysqli_num_rows($res) > 0 ){
+while($row = mysqli_fetch_array($res)){
+    if(password_verify($this->getPassword() , $row['password']) && $this->getUsername() == $row['username']){
+        $found = true;
+    }
+}
 }
 
+//$con->closeDatabase();
+return $found;
+}
 
-
-public static function isPasswordCorrect($password,$username)
-
-{
+public function login(){
+    if($this->isPasswordCorrect()){
+        header("Location:privatePage.php");
+    }
    
-    $conn = new dbconnector();
+  
+  }
 
-    $found = false;
-
-    $result = mysqli_query($conn->conn,"SELECT id, username, password FROM users WHERE username='$username'")
-
-    or die("Error".mysqli_error($conn->conn));
-
-
-
-
-
-    if($result->num_rows > 0)
-
-    {
-
-
-
-        $row = $result->fetch_assoc();
-
-        if (password_verify($password,$row['password']))
-
-        {
-
-            $found = true;
-
-
-
-        }
-
-    }
-
-
-
-    $conn->closeConnection();
-
-    return $found;
+public function logout(){
+        session_start();
+        unset($_SESSION['username']);
+        session_destroy();
+        header("Location: login.php");
+        //echo "You have been logged out!!!";
 
 }
 
-
-public function login($conn,$password,$username)
-{
-    if(self::isPasswordCorrect())
-    {
-        header("Location:private_page.php");
-    }
+public function hashPassword(){
+    $this->password = password_hash($this->password, PASSWORD_DEFAULT);
 }
-public static function createUserSession($username)
-{
+
+public function createUserSession(){
     session_start();
-    $_SESSION['username'] = $username;
-}
-public static function logout()
-{
-    session_start();
-    unset($_SESSION['username']);
-    session_destroy();
-    header("Location:lab1.php");
+
+    $_SESSION['username'] = $this->getUsername();
 
 }
-
 }
-
 
 ?>

@@ -2,11 +2,11 @@
 //Create login codes here
 include_once "user.php";
 
-//include_once "dbconnector.php";
+include_once "DBConnector.php";
 
 
 //connectto database
-$connection = new dbconnector();
+$connection = new DBConnector();
 
 
 
@@ -18,31 +18,33 @@ if(isset($_POST['btn-login']))
 
     $password = $_POST['password'];
 
+    
+    $instance = User::create();
+    
+    $instance->setPassword($password);
+    $instance->setUsername($username);
 
 
-    if(User::isPasswordCorrect($password,$username))
+    if($instance->isPasswordCorrect()){
+        $instance->login();
 
-    {
+         //closes the database connection
+        //$con->closeDatabase();
 
-        User::createUserSession($username);
+        //next, create a user session
+        $instance->createUserSession();
 
-        echo "complete";
-
-        header("Location:privatePage.php");
-
+        echo "You have successfully logged in";
+        
     }
+    else{
+        //$con->closeDatabase();
+        header("Location:login.php");
 
-    else
-
-    {
-
-        header('Location:login.php');
-
-        echo ""."error";
-
+       //echo "This password is not correct... Enter the correct password";
     }
-
 }
+
 
 ?>
 
