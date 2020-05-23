@@ -3,6 +3,7 @@
 include "Crud.php";
 include "authenticator.php";
 include_once "DBConnector.php";
+include_once "fileUpload.php";
 
 class User implements Crud, Authenticator{
     private $userid; 
@@ -14,10 +15,20 @@ class User implements Crud, Authenticator{
     private $username;
     private $password;
 
-
+   //timestamps and time offsets
+   private $timeoffset;
+   private $timestamp;
     function __construct(){
         
        
+}
+//Setters and Getters for the timestamp
+public function setTimeOffset($timeoffset){
+    $this->offset = $timeoffset;
+}
+
+public function getOffSet(){
+    return $this->offset;
 }
 
 public static function create(){
@@ -95,6 +106,8 @@ public static function create(){
 
     public function save(){
 
+           // $uploading = new fileUpload();
+
         $db = mysqli_connect("localhost", "root", "", "btc3205");
 
     $fn = $this->firstname;
@@ -104,6 +117,17 @@ public static function create(){
 
     $this->hashPassword();
     $pass = $this->password;
+
+    $image = time() .  '_' . $_FILES['filetoUpload']['name'];
+
+    
+    //$temp = mysqli_query($db,"INSERT INTO user(first_name,last_name,user_city,file,username,password) VALUES ('$fn', '$ln', '$city','$image', $uname', '$pass')") or die("Error:" . mysqli_error());
+    var_dump($fn);
+    var_dump($ln);
+    var_dump($city);
+    var_dump($uname);
+    var_dump($pass);
+    var_dump($image);
     
 
     $temp = mysqli_query($db,"INSERT INTO users(first_name,last_name,user_city,username,password) VALUES ('$fn', '$ln', '$city','$uname', '$pass')") or die("Error:" . mysqli_error());
