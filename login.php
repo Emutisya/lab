@@ -37,7 +37,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Jekyll v3.8.5">
-    <title>Signin Page</title>
+    <title>User Login Page</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.3/examples/sign-in/">
 
@@ -74,7 +74,10 @@
 <div class="section"></div>
     
       <div class="section"><i class="mdi-alert-error red-text"></i></div>
-      <h1>Login</h1>
+      <h1 class="text-info">User Login</h1>
+      <div class="text-center">
+  <img src="\IAP\lab\images\login.png"  class="img-circle" alt="Login Logo" style="width:30%; height:50% " >
+</div>
   
             <div class='row'>
            
@@ -96,7 +99,7 @@
             <center>
               <div class='row'>
                 <!-- <button style="margin-left:65px;"  type='submit' name='btn_login' class='col  s6 btn btn-small white black-text  waves-effect z-depth-1 y-depth-1'>Login</button> -->
-                <button name="btn-login"  style="margin-left:65px;" class='col  s6 btn btn-small white black-text  waves-effect z-depth-1 y-depth-1' type="submit">Sign in</button>
+                <button name="btn-login"  style="margin-left:30px;" class='col  s6 btn btn-small blue black-text  waves-effect z-depth-1 y-depth-1' type="submit">Sign in</button>
                 <!-- <button name="btn-login" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button> -->
        
               </div>
