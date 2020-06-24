@@ -1,18 +1,18 @@
-$(document).ready(function(){
-    var offSet = new Date().getTimezoneOffset();
+$(document).ready(function () {
+   
+    var offset = new Date().getTimezoneOffset();
+   
+    /*milliseconds since 1970/01/01:*/
     var timestamp = new Date().getTime();
-
-    var my_timestamp = timestamp + (60000 * offSet);
-
-    $('#time_offset').val(offSet);
-    $('#utc_timestamp').val(my_timestamp);
-
-
-
-    /*Explanation for what is happening in line 12 and 13.
-    /We are fetching the names of the placeholders on inputs in lab1.php and assigning
-    them to thenew variabled we have created
-*/
-document.write(offSet); 
-
-}); 
+   
+    /* Universal Coordinated time */
+   
+    var utc_timestamp = timestamp + (60000 * offset);
+   
+    //Passing the values to hidden inputs upon form submission
+    $("#submit").click(function (event) {
+     $('#utc_timestamp').val(utc_timestamp);
+     $('#time_zone_offset').val(offset)
+    });
+   
+   });

@@ -1,197 +1,219 @@
 <?php
-include_once 'user.php';
-include_once 'DBConnector.php';
-include_once 'fileUpload.php';
-
-
-$con = new DBConnector;
-
-$uploader = new fileUpload;
-
-
-
-
-if(isset($_POST['btn-save'])){
-
-   
-
-
+    include_once 'user.php';
+    include_once 'DBConnector.php';
+    include_once 'fileUploader.php';
+    $first_name = '';
+    $last_name = '';
+    $city = '';
+    $uname = '';
+    $pass = '';
+    $utc_timestamp = '';
+    $data = '';
+    $offset = '';
     
-    $firstname = $_POST['first_name'];
-    $lastname = $_POST['last_name'];
-    $cityname = $_POST['city_name'];
-    $username = $_POST['user_name'];
-    $password = $_POST['password'];
 
+    $user = new User($first_name,$last_name,$city,$uname,$pass,$data,$utc_timestamp,$offset);
+    $conn = new DBConnector();
+    
 
+    if (isset($_POST['btn-save'])) {
+        $first_name = $_POST['first_name'];
+        $last_name = $_POST['last_name'];
+        $city = $_POST['city_name'];
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+        $utc_timestamp = $_POST['utc_timestamp'];
+        $offset = $_POST['time_zone_offset'];
+        $data = $_FILES['filetoUpload'];
+        // die($data["name"]);
 
+        //Creating a new user object
+        $user = new User($first_name,$last_name,$city,$username,$password,$data,$utc_timestamp,$offset);
+        //Create the object for File Uploader
+        $uploader = new FileUploader($data);
 
+        if (!$user->validateForm()) {
+            $user->createFormErrorSessions();
+            header("Refresh:0");
+            return;
+        }else if($user->isUserExists($username)){
+            $user->createUsernameErrorSessions();
+            header("Refresh:0");
+            return;
+        }else{
+            $res = $user->save();
+        }
+        
+        
+       
+        $file_upload_response = $uploader->uploadFile();
+        
 
-
-$users  = new User();
-
-//firstname
-$users->setFirstname($firstname);
-$firstname = $users->getFirstname();
-   
-
-
-   //last name
-$users->setLastname($lastname);
-$lastname = $users->getLastname();
-
-
-
-//cityname
-$users->setCityname($cityname);
-$cityname = $users->getCityname();
- 
-
-
-//username
-$users->setUsername($username);
-$username = $users->getUsername();
- 
-
-//password
-$users->setPassword($password);
-$password = $users->getPassword();
-
-
-//object for uploading the file
-$uploader = new fileUpload;
-
-
-if(!$users->validateForm()){
-    $users->createFormErrorSessions();
-    header("Refresh:0");
-    die();
-
-}
-$temp = $users->save();
-
-//object for uploading the file
-
-$file_upload_reponse = $uploader->upLoadFile();
-
-
-if($temp & $file_upload_reponse){
-    echo "Saving was done successfully!!";
-}
-else{
-    echo "There was an error";
-}
-
-//$con->closeDatabase();
-
-
-}
-
-
-
-
-
+        //Check if the operation occured succesfully
+        if ($res && $file_upload_response === TRUE) {
+            $message = "Save Operation Was Succesful";
+        }else{
+            $message = "Save Operation Was Not Succesful";
+        }
+        $conn->closeDatabase();
+    }
 ?>
-
-<html>
-	<head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
-        <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Form Entries</title>
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
-	
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-	<title>Sign up Form</title>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <script type = "text/javascript" src = "validation.js"></script>
-    <link rel = "stylesheet" type = "text/css" href = "validate.css">
-   
-    <link rel="stylesheet" type="text/css" href="validate.css">
-    <script src= "https://ajax/googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.3/examples/floating-labels/">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
 
-    <script type = "text/javascript" src = "timezone.js"></script>
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="css/floating-labels.css" rel="stylesheet">
+    <script src="js/validate.js"></script>
     
+</head>
+<body>
+     
+    <form class="form-signin" method="post" style="margin-left:100px;margin-right:200px;" 
+        name="user_details" id="user_details" onsubmit="return validateForm()" 
+            action="<?=$_SERVER['PHP_SELF']?>" enctype="multipart/form-data">
 
-		</head>
-        <body>
-    <h2 align = "center">Sign Up here</h2>
-    <form method="post" name="user_details" id="user_details" onsubmit="return validateForm()" action="<?=$_SERVER['PHP_SELF']?>" enctype="multipart/form-data"  style='width:300px; border: 2px solid pink   '> 
-  
-    <div class="form-group">
-    <div class="form-group">
-    <div id="form-errors">
+        <div class="text-center"> 
+        
+        <div id="form-errors">
+            <?php
+                session_start();
+                if(!empty($_SESSION['form_errors'])){
+                    echo " ".$_SESSION['form_errors']."<br/><br/>";
+                  
+                    unset($_SESSION['form_errors']);
+                }
+            ?>
+        </div>
+        
+            <img style="margin-bottom:30px;" width="70%" height="70%" src="images/logo-1.png" alt="">
+            </div>
+         
+        </div>
 
-                        <?php
-
-                            session_start();
-
-                            if(!empty($_SESSION['form_errors']))
-
-                            {
-
-                                echo " ".$_SESSION['form_errors'];
-
-                                unset($_SESSION['form_errors']);
-
-                            }
-
-                        ?>
-
-                    </div>
-
-<label for="first_name">First Name:</label>
-
-<input type="text" class="form-control" name="first_name" required>
-
-</div>
-
-
-
-<div class="form-group">
-
-<label for="last_name">Last Name:</label>
-
-<input type="text" name="last_name" class="form-control" required>
-
-</div>
-
-
-
-<div class="form-group">
-
-<label for="city_name">City Name:</label>
-
-<input type="text" name="city_name" class="form-control"  required>
-
-</div>
-
-
-<div class="form-group">
-
-<label for="uname">Username</label>
-
-<input type="text" name="user_name" id="uname" class="form-control" >
-</div>
+        <div class="form-label-group">
+        <label for="inputEmail">First Name</label>
+            <input name="first_name" type="text" id="inputEmail" class="form-control" placeholder="First Name" autofocus>
            
-<div class="form-group">
-<label for="password">Password</label>
-<input type="password" name="password" id="password" class="form-control" >
+        </div>
 
-</div>
+        <div class="form-label-group">
+        <label for="inputLastname">Last Name</label>
+            <input name="last_name" type="text" id="inputLastname" class="form-control" placeholder="Last Name">
+        
+        </div>
 
-<div class="form-group">
-<label for="filetoUpload">Profile Image:</label>
-<input type="file" name="filetoUpload" id="filetoUpload" class="form-control" ></td></tr>
-</div>
+        <div class="form-label-group">
+        <label for="inputPassword">City Name</label>
+            <input name="city_name" type="text" id="inputPassword" class="form-control" placeholder="City Name">
+           
+        </div>
 
-<tr><td><input type="hidden" name="utc_timestamp" id="utc_timestamp" ></td></tr>
-<tr><td><input type="hidden" name="time_offset" id="time_offset" ></td></tr>
+        <div class="form-label-group">
+        <label for="inputUsername">Username</label>
+            <input name="username" type="text" id="inputUsername" class="form-control" placeholder="Username">
+        
+        </div>
+        <div class="form-label-group">
+        <label for="inputPassword1">Password</label>
+            <input name="password" type="password" id="inputPassword1" class="form-control" placeholder="Password">
+            
+        </div>
+        <br>
 
-<button type="submit" name="btn-save" class="btn btn-default"><strong>SAVE</strong></button>
+        <div class="form-label-group">
+            <input type="file" name="filetoUpload" class="form-control-file" id="exampleFormControlFile1">        
+        </div>
+        <br>
 
-</div>
-<a href="login.php">Login</a>
-  </form>
+        
+        <button name="btn-save" class="btn btn-primary" type="submit">SAVE</button>
+        <a class="btn btn-primary" href="login.php" role="button">LOGIN</a>
+        
+        <input type="hidden" name="utc_timestamp" id="utc_timestamp" value="">
+        <input type="hidden" name="time_zone_offset" id="time_zone_offset" value="">
+    </form>
 
-    </body>
-</html>
+    <div>
+    <div id="form-error">
+        <?php
+            if (isset($message)) {
+                echo
+                '
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    '.$message.'
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                ';
+            }
+        ?>
+    </div>  
+        <table id="example" style="padding-left:-100px;" class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">City Name</th>
+                <th scope="col">Username</th>
+            </tr> 
+            </thead>
+            <tbody>
+                <?php
+                    $result = $user->readAll();
+                    if($result->num_rows > 0){
+                        while($row = $result->fetch_array()){
+                            echo "<tr>";
+                                echo "<td>" . $row['id'] . "</td>";
+                                echo "<td>" . $row['first_name'] . "</td>";
+                                echo "<td>" . $row['last_name'] . "</td>";
+                                echo "<td>" . $row['user_city'] . "</td>";
+                                echo "<td>" . $row['username'] . "</td>";
+                            echo "</tr>";
+                        }
+                    }
+                ?>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+<script src="js/timezone.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#example').DataTable();
+    } );
+</script>
+

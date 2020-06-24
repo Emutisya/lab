@@ -1,33 +1,16 @@
-<?php 
+<?php
+    interface Crud{
+       
+        public function save();
+        public function readAll();
+        public function readUnique();
+        public function search();
+        public function update();
+        public function removeOne();
+        public function removeAll();
 
-   interface Crud{
-
-    
-
-    public function save();
-
-    public function readAll();
-
-    public function readUnique();
-
-    public function search();
-
-    public function update();
-
-    public function removeOne();
-
-    public function removeAll();
-
-//Lab 2 additions
-    public function validateForm();
-
-
-
-    public function createFormErrorSessions();
- 
-
-   } 
-
-
+        public function validateForm();
+        public function createFormErrorSessions();
+    }
 
 ?>
