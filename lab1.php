@@ -67,6 +67,18 @@
     <title>Form Entries</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.3/examples/floating-labels/">
+    
+
+        
+        <meta charset="utf-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
@@ -92,6 +104,8 @@
     
 </head>
 <body>
+
+<center><h1> Enter User Details: </h1></center>
      
     <form class="form-signin" method="post" style="margin-left:100px;margin-right:200px;" 
         name="user_details" id="user_details" onsubmit="return validateForm()" 
@@ -149,10 +163,10 @@
             <input type="file" name="filetoUpload" class="form-control-file" id="exampleFormControlFile1">        
         </div>
         <br>
-
+<center>
         
-        <button name="btn-save" class="btn btn-primary" type="submit">SAVE</button>
-        <a class="btn btn-primary" href="login.php" role="button">LOGIN</a>
+        <button name="btn-save" class="btn btn-dark" type="submit">ADD USER RECORDS</button>
+        <a class="btn btn-link" href="login.php" role="button">LOGIN</a></center>
         
         <input type="hidden" name="utc_timestamp" id="utc_timestamp" value="">
         <input type="hidden" name="time_zone_offset" id="time_zone_offset" value="">
@@ -175,9 +189,9 @@
         ?>
     </div>  
         <table id="example" style="padding-left:-100px;" class="table">
-            <thead class="thead-dark">
+            <thead class="table table-striped">
             <tr>
-                <th scope="col">#</th>
+                <th scope="col">User ID</th>
                 <th scope="col">First Name</th>
                 <th scope="col">Last Name</th>
                 <th scope="col">City Name</th>
